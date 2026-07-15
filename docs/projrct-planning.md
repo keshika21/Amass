@@ -1,9 +1,10 @@
 # Amass - Project Planning
 
 ## Problem Statement
-Many students and young professionals struggle to manage their personal finances effectively. They often do not keep proper records of their income and expenses, leading to overspending, poor budgeting, and difficulty achieving savings goals. Existing methods such as notebooks and simple spreadsheets do not provide meaningful insights into spending patterns.
+University students often receive a limited monthly allowance, scholarship, or part-time income, making it important to manage their money carefully. However, many students do not record their daily expenses, especially small purchases such as food, transport, or mobile data. As a result, they often lose track of where their money goes, make impulse purchases, overspend, and struggle to build consistent saving habits. Existing methods such as notebooks and spreadsheets require manual effort and do not provide clear insights into spending patterns.
 
-Amass is a web-based personal finance tracker that helps users record income and expenses, visualize spending patterns through charts, create budgets and savings goals, and receive meaningful insights that support better financial decisions.
+Amass is a web-based personal finance tracker designed primarily for university students. It enables users to record income and expenses quickly, monitor their available balance, visualize spending through interactive charts, set budgets and savings goals, and gain simple insights that encourage better financial decisions and healthier spending habits.
+
 
 ## Target Users
 **Primary Users**
