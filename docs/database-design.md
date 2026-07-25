@@ -54,6 +54,10 @@
 - Category rows are shared across all users (not user-owned), since MVP scope uses predefined categories only (FR13). Custom categories are deferred to "Should Have."
 - SavingsGoal tracks `current_amount` explicitly rather than deriving it from a broader "available savings" concept, to keep progress calculation (FR11) unambiguous.
 
+
+## Database Choice
+MySQL was selected for this project due to its strong compatibility with PHP, wide community support, and suitability for student/portfolio-scale full-stack applications.
+
 ## ER Diagram (Mermaid source)
 
 \`\`\`mermaid
