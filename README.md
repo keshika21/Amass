@@ -27,10 +27,6 @@ Many students and young professionals don't keep proper records of income and ex
 
 **Architecture:** 3-tier — React (client) → Express (REST API) → MySQL (database). The frontend never accesses the database directly; all requests go through the authenticated API layer.
 
-## Screenshots
-
-*(Add screenshots here — Dashboard, Transactions, Budgets, Goals pages. Drag image files into this section on GitHub, or reference `docs/screenshots/filename.png`.)*
-
 ## Project Structure
 Amass/
 ├── backend/ # Express REST API
