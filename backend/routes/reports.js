@@ -23,13 +23,13 @@ router.get('/monthly', async (req, res) => {
     );
 
     const [byCategory] = await db.query(
-      `SELECT c.name AS category, SUM(t.amount) AS total
-       FROM transactions t
-       JOIN categories c ON t.category_id = c.category_id
-       WHERE t.user_id = ? AND t.type = 'expense' AND MONTH(t.date) = ? AND YEAR(t.date) = ?
-       GROUP BY c.name`,
-      [req.user.user_id, month, year]
-    );
+  `SELECT c.name AS category, CAST(SUM(t.amount) AS DECIMAL(12,2)) + 0 AS total
+   FROM transactions t
+   JOIN categories c ON t.category_id = c.category_id
+   WHERE t.user_id = ? AND t.type = 'expense' AND MONTH(t.date) = ? AND YEAR(t.date) = ?
+   GROUP BY c.name`,
+  [req.user.user_id, month, year]
+);
 
     res.json({
       total_income: summary[0].total_income || 0,

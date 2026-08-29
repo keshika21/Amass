@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 router.get('/chart', async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT c.name AS category, SUM(t.amount) AS total
+      `SELECT c.name AS category, CAST(SUM(t.amount) AS DECIMAL(12,2)) + 0 AS total
        FROM transactions t
        JOIN categories c ON t.category_id = c.category_id
        WHERE t.user_id = ? AND t.type = 'expense'
