@@ -1,33 +1,40 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { useToast } from '../context/ToastContext';
+import Spinner from '../components/Spinner';
 
 export default function Budgets() {
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ category_id: '', month: new Date().getMonth() + 1, year: new Date().getFullYear(), limit_amount: '' });
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   const loadBudgets = () => api.get('/budgets').then((res) => setBudgets(res.data));
 
   useEffect(() => {
-    loadBudgets();
-    api.get('/categories').then((res) => setCategories(res.data.filter(c => c.type === 'expense')));
+    Promise.all([
+      loadBudgets(),
+      api.get('/categories').then((res) => setCategories(res.data.filter(c => c.type === 'expense'))),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
       await api.post('/budgets', form);
       setForm({ ...form, category_id: '', limit_amount: '' });
       loadBudgets();
+      showToast('Budget set', 'success');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create budget');
+      showToast(err.response?.data?.error || 'Failed to create budget', 'error');
     }
   };
 
+  if (loading) return <div className="page"><Spinner /></div>;
+
   return (
-    <div className="page">
+    <div className="page fade-in">
       <h2>Budgets</h2>
 
       <form onSubmit={handleSubmit} className="form-row">
@@ -40,29 +47,39 @@ export default function Budgets() {
         <input type="number" placeholder="Limit" value={form.limit_amount} onChange={(e) => setForm({ ...form, limit_amount: e.target.value })} required style={{ width: 110 }} />
         <button type="submit" className="btn">Set Budget</button>
       </form>
-      {error && <p className="error" style={{marginTop: -12, marginBottom: 16}}>{error}</p>}
 
       {budgets.length === 0 ? (
-        <p className="empty-state">No budgets set yet.</p>
+        <div className="empty-state-card">
+          <div className="empty-icon">◧</div>
+          <p>No budgets set</p>
+          <span>Set a monthly limit for a category above</span>
+        </div>
       ) : (
-        <table className="ledger">
-          <thead>
-            <tr><th>Category</th><th>Period</th><th style={{textAlign:'right'}}>Limit</th><th style={{textAlign:'right'}}>Spent</th><th style={{textAlign:'right'}}>Remaining</th></tr>
-          </thead>
-          <tbody>
-            {budgets.map((b) => (
-              <tr key={b.budget_id}>
-                <td>{b.category_name}</td>
-                <td className="mono">{b.month}/{b.year}</td>
-                <td className="amount mono">{b.limit_amount}</td>
-                <td className="amount mono">{b.spent}</td>
-                <td className={`amount mono ${b.spent > b.limit_amount ? 'expense' : 'income'}`}>
-                  {(b.limit_amount - b.spent).toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="table-wrap">
+          <table className="ledger">
+            <thead>
+              <tr><th>Category</th><th>Period</th><th style={{textAlign:'right'}}>Limit</th><th style={{textAlign:'right'}}>Spent</th><th style={{textAlign:'right'}}>Remaining</th></tr>
+            </thead>
+            <tbody>
+              {budgets.map((b) => {
+                const pct = Math.min(100, (b.spent / b.limit_amount) * 100);
+                const over = b.spent > b.limit_amount;
+                return (
+                  <tr key={b.budget_id} className="row-enter">
+                    <td>
+                      {b.category_name}
+                      <div className="mini-track"><div className="mini-fill" style={{ width: `${pct}%`, background: over ? 'var(--expense)' : 'var(--gold)' }} /></div>
+                    </td>
+                    <td className="mono">{b.month}/{b.year}</td>
+                    <td className="amount mono">{b.limit_amount}</td>
+                    <td className="amount mono">{b.spent}</td>
+                    <td className={`amount mono ${over ? 'expense' : 'income'}`}>{(b.limit_amount - b.spent).toFixed(2)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

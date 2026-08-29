@@ -173,6 +173,15 @@ h3 { font-size: 1.15rem; }
   border-bottom: 1px dashed var(--line);
 }
 
+.mini-track {
+  height: 4px;
+  background: var(--bg);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.mini-fill { height: 100%; transition: width 0.3s ease; }
+
 input, select {
   font-family: var(--font-body);
   font-size: 0.9rem;
@@ -308,4 +317,156 @@ td.amount.expense { color: var(--expense); }
   color: var(--muted);
   font-size: 0.9rem;
   padding: 1rem 0;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.35s ease; }
+
+@keyframes rowIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+.row-enter { animation: rowIn 0.25s ease; }
+
+/* ---------- Tactile depth (subtle 3D) ---------- */
+.tilt-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: translateY(-3px) rotateX(1deg);
+  box-shadow: 0 14px 28px -12px rgba(31, 77, 61, 0.22);
+}
+.card, .goal-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card:hover, .goal-card:hover { box-shadow: 0 10px 22px -14px rgba(31, 77, 61, 0.25); }
+
+.btn { transition: background 0.15s, transform 0.12s; }
+.btn:active { transform: scale(0.97); }
+.btn-outline { transition: background 0.15s, transform 0.12s, border-color 0.15s; }
+.btn-outline:active { transform: scale(0.97); }
+
+table.ledger tr { transition: background 0.15s; }
+table.ledger tr:hover { background: rgba(31, 77, 61, 0.03); }
+
+/* ---------- Spinner ---------- */
+.spinner-wrap { display: flex; justify-content: center; padding: 4rem 0; }
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--line);
+  border-top-color: var(--ledger);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Toasts ---------- */
+.toast-stack {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 200;
+}
+.toast {
+  padding: 0.75rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(0,0,0,0.3);
+  animation: toastIn 0.25s ease, toastOut 0.25s ease 2.9s;
+}
+.toast-success { background: var(--ledger); }
+.toast-error { background: var(--expense); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(-6px); } }
+
+/* ---------- Modal / confirm dialog ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(31, 38, 32, 0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300;
+  animation: fadeIn 0.15s ease;
+}
+.modal-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 24px 48px -12px rgba(0,0,0,0.35);
+}
+.modal-message { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 1.5rem; }
+.modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+.btn-danger { background: var(--expense); }
+.btn-danger:hover { background: #8a362f; }
+
+/* ---------- Empty states ---------- */
+.empty-state-card {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+}
+.empty-state-card .empty-icon { font-size: 1.8rem; color: var(--gold); margin-bottom: 0.5rem; }
+.empty-state-card p { font-weight: 600; color: var(--ink); margin: 0 0 0.2rem; }
+.empty-state-card span { font-size: 0.85rem; }
+.empty-state-card a { color: var(--ledger); font-weight: 600; }
+
+/* ---------- Dashboard layout ---------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+.recent-list { display: flex; flex-direction: column; gap: 0; padding: 0.5rem 1.25rem; }
+.recent-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.recent-row:last-child { border-bottom: none; }
+.recent-cat { font-weight: 500; font-size: 0.9rem; }
+.recent-date { font-size: 0.75rem; color: var(--muted); }
+
+.table-wrap { overflow-x: auto; }
+
+/* ---------- Mobile responsive navbar ---------- */
+.desktop-only { display: flex; align-items: center; gap: 1.75rem; }
+.mobile-only { display: none; }
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 8px;
+}
+.hamburger span { width: 20px; height: 2px; background: #fff; border-radius: 2px; }
+.mobile-menu {
+  position: absolute;
+  top: 60px; left: 0; right: 0;
+  background: var(--ledger);
+  display: flex; flex-direction: column;
+  padding: 0.5rem 1.5rem 1.25rem;
+  gap: 0.9rem;
+  box-shadow: 0 12px 24px -8px rgba(0,0,0,0.25);
+  z-index: 100;
+}
+.mobile-menu a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.4rem 0; }
+.mobile-menu a.active { color: #fff; font-weight: 600; }
+.mobile-menu-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 0.5rem; padding-top: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85); font-size: 0.85rem;
+}
+
+@media (max-width: 720px) {
+  .desktop-only { display: none; }
+  .mobile-only { display: flex; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .passbook-rows { gap: 1.5rem; }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row input, .form-row select { width: 100% !important; }
 }
