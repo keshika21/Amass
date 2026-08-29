@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const db = require('./db');
-console.log('DB constructor:', db.constructor.name);
-console.log('DB prototype methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(db)));
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +13,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({ message: 'Amass API is running' });
 });
+
+app.use('/api/auth', authRoutes);
 
 app.get('/api/categories', async (req, res) => {
   try {
