@@ -3,6 +3,8 @@ import api from '../api/axios';
 import { useToast } from '../context/ToastContext';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Spinner from '../components/Spinner';
+import TiltCard from '../components/TiltCard';
+import PageTransition from '../components/PageTransition';
 
 export default function Goals() {
   const [goals, setGoals] = useState([]);
@@ -42,45 +44,55 @@ export default function Goals() {
   if (loading) return <div className="page"><Spinner /></div>;
 
   return (
-    <div className="page fade-in">
-      <h2>Savings Goals</h2>
+    <PageTransition>
+      <div className="page">
+        <h2>Savings Goals</h2>
 
-      <form onSubmit={handleSubmit} className="form-row">
-        <input type="text" placeholder="Goal name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required style={{ flex: 1, minWidth: 140 }} />
-        <input type="number" placeholder="Target amount" value={form.target_amount} onChange={(e) => setForm({ ...form, target_amount: e.target.value })} required style={{ width: 130 }} />
-        <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} required />
-        <button type="submit" className="btn">Add Goal</button>
-      </form>
+        <TiltCard className="card" glow={false}>
+          <form onSubmit={handleSubmit} className="form-row" style={{ marginBottom: 0, paddingBottom: 0, border: 'none' }}>
+            <input type="text" placeholder="Goal name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required style={{ flex: 1, minWidth: 140 }} />
+            <input type="number" placeholder="Target amount" value={form.target_amount} onChange={(e) => setForm({ ...form, target_amount: e.target.value })} required style={{ width: 130 }} />
+            <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} required />
+            <button type="submit" className="btn">Add Goal</button>
+          </form>
+        </TiltCard>
 
-      {goals.length === 0 ? (
-        <div className="empty-state-card">
-          <div className="empty-icon">◈</div>
-          <p>No savings goals yet</p>
-          <span>Set your first target above</span>
-        </div>
-      ) : goals.map((g) => {
-        const pct = Math.min(100, (g.current_amount / g.target_amount) * 100).toFixed(0);
-        return (
-          <div key={g.goal_id} className="goal-card tilt-card row-enter">
-            <div className="goal-header">
-              <strong>{g.name}</strong>
-              <button className="btn-outline" onClick={() => setConfirmId(g.goal_id)}>Delete</button>
-            </div>
-            <div className="goal-amounts">{g.current_amount} / {g.target_amount} &middot; by {g.target_date?.slice(0, 10)}</div>
-            <div className="progress-track">
-              <div className="progress-fill" style={{ width: `${pct}%` }} />
-            </div>
+        <div style={{ height: '1.5rem' }} />
+
+        {goals.length === 0 ? (
+          <div className="empty-state-card">
+            <div className="empty-icon">◈</div>
+            <p>No savings goals yet</p>
+            <span>Set your first target above</span>
           </div>
-        );
-      })}
+        ) : (
+          <div className="goals-grid">
+            {goals.map((g) => {
+              const pct = Math.min(100, (g.current_amount / g.target_amount) * 100).toFixed(0);
+              return (
+                <TiltCard key={g.goal_id} className="goal-card">
+                  <div className="goal-header">
+                    <strong>{g.name}</strong>
+                    <button className="btn-outline" onClick={() => setConfirmId(g.goal_id)}>Delete</button>
+                  </div>
+                  <div className="goal-amounts">{g.current_amount} / {g.target_amount} &middot; by {g.target_date?.slice(0, 10)}</div>
+                  <div className="progress-track">
+                    <div className="progress-fill" style={{ width: `${pct}%` }} />
+                  </div>
+                </TiltCard>
+              );
+            })}
+          </div>
+        )}
 
-      <ConfirmDialog
-        open={!!confirmId}
-        title="Delete goal?"
-        message="This can't be undone."
-        onConfirm={handleDelete}
-        onCancel={() => setConfirmId(null)}
-      />
-    </div>
+        <ConfirmDialog
+          open={!!confirmId}
+          title="Delete goal?"
+          message="This can't be undone."
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmId(null)}
+        />
+      </div>
+    </PageTransition>
   );
 }

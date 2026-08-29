@@ -39,6 +39,12 @@ h1, h2, h3 {
 h2 { font-size: 1.6rem; }
 h3 { font-size: 1.15rem; }
 
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -318,6 +324,53 @@ td.amount.expense { color: var(--expense); }
   font-size: 0.9rem;
   padding: 1rem 0;
 }
+
+/* ---------- 3D tilt card system ---------- */
+.tilt3d {
+  position: relative;
+  transform-style: preserve-3d;
+  border-radius: var(--radius);
+  cursor: default;
+}
+.tilt3d-content { position: relative; z-index: 2; transform: translateZ(20px); }
+.tilt3d-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.tilt3d:hover .tilt3d-glow { opacity: 1; }
+
+/* Give the passbook and cards genuine layered depth */
+.passbook, .card, .goal-card {
+  box-shadow: 0 1px 2px rgba(31,38,32,0.04), 0 8px 20px -10px rgba(31,77,61,0.12);
+  transition: box-shadow 0.3s ease;
+}
+.tilt3d:hover.passbook, .tilt3d:hover .card, .tilt3d.card:hover {
+  box-shadow: 0 4px 8px rgba(31,38,32,0.06), 0 24px 48px -16px rgba(31,77,61,0.28);
+}
+
+/* Backdrop for the whole app - subtle depth gradient instead of flat color */
+html, body, #root {
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, #eef1e6 0%, var(--bg) 55%);
+}
+
+/* Buttons get real pressed depth */
+.btn {
+  box-shadow: 0 2px 0 var(--ledger-dark), 0 4px 10px -4px rgba(31,77,61,0.4);
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+}
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 var(--ledger-dark), 0 2px 4px -2px rgba(31,77,61,0.4);
+}
+
+/* Recent activity rows lift slightly on hover */
+.recent-row { transition: transform 0.15s ease, background 0.15s ease; border-radius: 6px; padding-left: 0.4rem; padding-right: 0.4rem; margin: 0 -0.4rem; }
+.recent-row:hover { background: rgba(201,162,39,0.08); transform: translateX(2px); }
 
 /* ---------- Animations ---------- */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }

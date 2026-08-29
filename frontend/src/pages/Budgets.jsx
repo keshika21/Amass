@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { useToast } from '../context/ToastContext';
 import Spinner from '../components/Spinner';
+import TiltCard from '../components/TiltCard';
+import PageTransition from '../components/PageTransition';
 
 export default function Budgets() {
   const [budgets, setBudgets] = useState([]);
@@ -34,53 +36,61 @@ export default function Budgets() {
   if (loading) return <div className="page"><Spinner /></div>;
 
   return (
-    <div className="page fade-in">
-      <h2>Budgets</h2>
+    <PageTransition>
+      <div className="page">
+        <h2>Budgets</h2>
 
-      <form onSubmit={handleSubmit} className="form-row">
-        <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
-          <option value="">Category</option>
-          {categories.map((c) => <option key={c.category_id} value={c.category_id}>{c.name}</option>)}
-        </select>
-        <input type="number" placeholder="Month" min="1" max="12" value={form.month} onChange={(e) => setForm({ ...form, month: e.target.value })} required style={{ width: 90 }} />
-        <input type="number" placeholder="Year" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} required style={{ width: 100 }} />
-        <input type="number" placeholder="Limit" value={form.limit_amount} onChange={(e) => setForm({ ...form, limit_amount: e.target.value })} required style={{ width: 110 }} />
-        <button type="submit" className="btn">Set Budget</button>
-      </form>
+        <TiltCard className="card" glow={false}>
+          <form onSubmit={handleSubmit} className="form-row" style={{ marginBottom: 0, paddingBottom: 0, border: 'none' }}>
+            <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+              <option value="">Category</option>
+              {categories.map((c) => <option key={c.category_id} value={c.category_id}>{c.name}</option>)}
+            </select>
+            <input type="number" placeholder="Month" min="1" max="12" value={form.month} onChange={(e) => setForm({ ...form, month: e.target.value })} required style={{ width: 90 }} />
+            <input type="number" placeholder="Year" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} required style={{ width: 100 }} />
+            <input type="number" placeholder="Limit" value={form.limit_amount} onChange={(e) => setForm({ ...form, limit_amount: e.target.value })} required style={{ width: 110 }} />
+            <button type="submit" className="btn">Set Budget</button>
+          </form>
+        </TiltCard>
 
-      {budgets.length === 0 ? (
-        <div className="empty-state-card">
-          <div className="empty-icon">◧</div>
-          <p>No budgets set</p>
-          <span>Set a monthly limit for a category above</span>
-        </div>
-      ) : (
-        <div className="table-wrap">
-          <table className="ledger">
-            <thead>
-              <tr><th>Category</th><th>Period</th><th style={{textAlign:'right'}}>Limit</th><th style={{textAlign:'right'}}>Spent</th><th style={{textAlign:'right'}}>Remaining</th></tr>
-            </thead>
-            <tbody>
-              {budgets.map((b) => {
-                const pct = Math.min(100, (b.spent / b.limit_amount) * 100);
-                const over = b.spent > b.limit_amount;
-                return (
-                  <tr key={b.budget_id} className="row-enter">
-                    <td>
-                      {b.category_name}
-                      <div className="mini-track"><div className="mini-fill" style={{ width: `${pct}%`, background: over ? 'var(--expense)' : 'var(--gold)' }} /></div>
-                    </td>
-                    <td className="mono">{b.month}/{b.year}</td>
-                    <td className="amount mono">{b.limit_amount}</td>
-                    <td className="amount mono">{b.spent}</td>
-                    <td className={`amount mono ${over ? 'expense' : 'income'}`}>{(b.limit_amount - b.spent).toFixed(2)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+        <div style={{ height: '1.5rem' }} />
+
+        {budgets.length === 0 ? (
+          <div className="empty-state-card">
+            <div className="empty-icon">◧</div>
+            <p>No budgets set</p>
+            <span>Set a monthly limit for a category above</span>
+          </div>
+        ) : (
+          <TiltCard className="card" glow={false}>
+            <div className="table-wrap">
+              <table className="ledger">
+                <thead>
+                  <tr><th>Category</th><th>Period</th><th style={{textAlign:'right'}}>Limit</th><th style={{textAlign:'right'}}>Spent</th><th style={{textAlign:'right'}}>Remaining</th></tr>
+                </thead>
+                <tbody>
+                  {budgets.map((b) => {
+                    const pct = Math.min(100, (b.spent / b.limit_amount) * 100);
+                    const over = b.spent > b.limit_amount;
+                    return (
+                      <tr key={b.budget_id} className="row-enter">
+                        <td>
+                          {b.category_name}
+                          <div className="mini-track"><div className="mini-fill" style={{ width: `${pct}%`, background: over ? 'var(--expense)' : 'var(--gold)' }} /></div>
+                        </td>
+                        <td className="mono">{b.month}/{b.year}</td>
+                        <td className="amount mono">{b.limit_amount}</td>
+                        <td className="amount mono">{b.spent}</td>
+                        <td className={`amount mono ${over ? 'expense' : 'income'}`}>{(b.limit_amount - b.spent).toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </TiltCard>
+        )}
+      </div>
+    </PageTransition>
   );
 }
