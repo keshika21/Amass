@@ -22,27 +22,29 @@ export default function Goals() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="page">
       <h2>Savings Goals</h2>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <input type="text" placeholder="Goal name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-        <input type="number" placeholder="Target amount" value={form.target_amount} onChange={(e) => setForm({ ...form, target_amount: e.target.value })} required />
+      <form onSubmit={handleSubmit} className="form-row">
+        <input type="text" placeholder="Goal name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required style={{ flex: 1, minWidth: 140 }} />
+        <input type="number" placeholder="Target amount" value={form.target_amount} onChange={(e) => setForm({ ...form, target_amount: e.target.value })} required style={{ width: 130 }} />
         <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} required />
-        <button type="submit">Add Goal</button>
+        <button type="submit" className="btn">Add Goal</button>
       </form>
 
-      {goals.map((g) => {
+      {goals.length === 0 ? (
+        <p className="empty-state">No savings goals yet — set your first one above.</p>
+      ) : goals.map((g) => {
         const pct = Math.min(100, (g.current_amount / g.target_amount) * 100).toFixed(0);
         return (
-          <div key={g.goal_id} style={{ marginBottom: 16, border: '1px solid #ddd', padding: 12, borderRadius: 6 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div key={g.goal_id} className="goal-card">
+            <div className="goal-header">
               <strong>{g.name}</strong>
-              <button onClick={() => handleDelete(g.goal_id)}>Delete</button>
+              <button className="btn-outline" onClick={() => handleDelete(g.goal_id)}>Delete</button>
             </div>
-            <div>{g.current_amount} / {g.target_amount} (by {g.target_date?.slice(0, 10)})</div>
-            <div style={{ background: '#eee', borderRadius: 4, height: 10, marginTop: 6 }}>
-              <div style={{ width: `${pct}%`, background: '#4caf50', height: '100%', borderRadius: 4 }} />
+            <div className="goal-amounts">{g.current_amount} / {g.target_amount} &middot; by {g.target_date?.slice(0, 10)}</div>
+            <div className="progress-track">
+              <div className="progress-fill" style={{ width: `${pct}%` }} />
             </div>
           </div>
         );

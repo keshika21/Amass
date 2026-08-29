@@ -22,16 +22,19 @@ export default function Register() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '4rem auto' }}>
-      <h2>Create your Amass account</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required style={{ display: 'block', width: '100%', marginBottom: 10, padding: 8 }} />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ display: 'block', width: '100%', marginBottom: 10, padding: 8 }} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ display: 'block', width: '100%', marginBottom: 10, padding: 8 }} />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" style={{ padding: 8, width: '100%' }}>Register</button>
-      </form>
-      <p>Already have an account? <Link to="/login">Login here</Link></p>
+    <div className="auth-wrap">
+      <div className="auth-card">
+        <h2>Start your ledger</h2>
+        <p className="auth-sub">Create your Amass account</p>
+        <form onSubmit={handleSubmit}>
+          <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          {error && <p className="error">{error}</p>}
+          <button type="submit" className="btn">Create account</button>
+        </form>
+        <p className="switch">Already have an account? <Link to="/login">Log in</Link></p>
+      </div>
     </div>
   );
 }

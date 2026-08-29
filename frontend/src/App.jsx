@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Budgets from './pages/Budgets';
 import Goals from './pages/Goals';
+import Reports from './pages/Reports';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/budgets" element={<ProtectedRoute><Budgets /></ProtectedRoute>} />
           <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
           <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} /><Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
