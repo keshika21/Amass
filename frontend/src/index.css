@@ -205,23 +205,37 @@ input[type="number"], input[type="date"] { font-family: var(--font-mono); }
 
 .btn {
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.88rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: 6px;
-  border: none;
-  background: var(--ledger);
+  letter-spacing: 0.01em;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--ledger-dark);
+  background: linear-gradient(180deg, var(--ledger) 0%, var(--ledger-dark) 100%);
   color: #fff;
   cursor: pointer;
-  transition: background 0.15s;
+  box-shadow: 0 10px 18px -12px rgba(22, 58, 45, 0.8);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, background 0.15s ease;
 }
-.btn:hover { background: var(--ledger-dark); }
+.btn:hover {
+  background: linear-gradient(180deg, #245946 0%, var(--ledger-dark) 100%);
+  box-shadow: 0 14px 20px -12px rgba(22, 58, 45, 0.82);
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 12px -10px rgba(22, 58, 45, 0.9);
+}
 .btn-outline {
   background: transparent;
   color: var(--expense);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(168, 67, 58, 0.35);
+  box-shadow: none;
 }
-.btn-outline:hover { background: #fbeceb; }
+.btn-outline:hover {
+  background: #fbeceb;
+  border-color: rgba(168, 67, 58, 0.5);
+}
 
 table.ledger {
   width: 100%;
@@ -326,31 +340,14 @@ td.amount.expense { color: var(--expense); }
 }
 
 /* ---------- 3D tilt card system ---------- */
-.tilt3d {
-  position: relative;
-  transform-style: preserve-3d;
-  border-radius: var(--radius);
-  cursor: default;
-}
-.tilt3d-content { position: relative; z-index: 2; transform: translateZ(20px); }
-.tilt3d-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.tilt3d:hover .tilt3d-glow { opacity: 1; }
-
-/* Give the passbook and cards genuine layered depth */
+/* Calm hover feedback: subtle elevation without tilt or cursor tracking */
 .passbook, .card, .goal-card {
   box-shadow: 0 1px 2px rgba(31,38,32,0.04), 0 8px 20px -10px rgba(31,77,61,0.12);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-.tilt3d:hover.passbook, .tilt3d:hover .card, .tilt3d.card:hover {
-  box-shadow: 0 4px 8px rgba(31,38,32,0.06), 0 24px 48px -16px rgba(31,77,61,0.28);
+.passbook:hover, .card:hover, .goal-card:hover {
+  box-shadow: 0 4px 8px rgba(31,38,32,0.06), 0 18px 32px -16px rgba(31,77,61,0.2);
+  transform: translateY(-2px);
 }
 
 /* Backdrop for the whole app - subtle depth gradient instead of flat color */
@@ -360,12 +357,12 @@ html, body, #root {
 
 /* Buttons get real pressed depth */
 .btn {
-  box-shadow: 0 2px 0 var(--ledger-dark), 0 4px 10px -4px rgba(31,77,61,0.4);
-  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+  box-shadow: 0 10px 18px -12px rgba(22, 58, 45, 0.8);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, background 0.15s ease;
 }
 .btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 0 0 var(--ledger-dark), 0 2px 4px -2px rgba(31,77,61,0.4);
+  transform: translateY(0);
+  box-shadow: 0 6px 12px -10px rgba(22, 58, 45, 0.9);
 }
 
 /* Recent activity rows lift slightly on hover */
@@ -381,20 +378,22 @@ html, body, #root {
 
 /* ---------- Tactile depth (subtle 3D) ---------- */
 .tilt-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  will-change: transform;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .tilt-card:hover {
-  transform: translateY(-3px) rotateX(1deg);
-  box-shadow: 0 14px 28px -12px rgba(31, 77, 61, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -12px rgba(31, 77, 61, 0.22);
 }
 .card, .goal-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.card:hover, .goal-card:hover { box-shadow: 0 10px 22px -14px rgba(31, 77, 61, 0.25); }
+.card:hover, .goal-card:hover {
+  box-shadow: 0 10px 22px -14px rgba(31, 77, 61, 0.25);
+  transform: translateY(-2px);
+}
 
-.btn { transition: background 0.15s, transform 0.12s; }
-.btn:active { transform: scale(0.97); }
-.btn-outline { transition: background 0.15s, transform 0.12s, border-color 0.15s; }
-.btn-outline:active { transform: scale(0.97); }
+.btn { transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.12s ease; }
+.btn:active { transform: translateY(0) scale(0.99); }
+.btn-outline { transition: background 0.15s ease, transform 0.12s ease, border-color 0.15s ease; }
+.btn-outline:active { transform: scale(0.99); }
 
 table.ledger tr { transition: background 0.15s; }
 table.ledger tr:hover { background: rgba(31, 77, 61, 0.03); }
